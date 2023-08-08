@@ -8,16 +8,24 @@ const getData = (url) => {
             return response.json();
         }
         else {
-            throw new Error('Something went wrong...');
+            throw new Error('Что-то пошло не так...');
         }
     });
 };
 getData(COMMENTS_URL)
     .then((data) => {
+    if (!Array.isArray(data)) {
+        throw new Error("Данные не соответствуют ожидаемому формату");
+    }
     for (let obj of data) {
-        console.log(`ID: ${obj.id}, Email: ${obj.email}`);
+        if (obj && obj.id && obj.email) {
+            console.log(`ID: ${obj.id}, Email: ${obj.email}`);
+        }
+        else {
+            throw new Error('Полученные данные содержат недостающие обязательные поля');
+        }
     }
 })
     .catch((error) => {
-    console.log(error);
+    console.error(`Ошибка: ${error.message}`);
 });
